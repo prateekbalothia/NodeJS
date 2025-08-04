@@ -1,0 +1,26 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "Learning Node",
+  "keywords": [
+    "NodeJS"
+  ],
+  "homepage": "https://github.com/prateekbalothia/NodeJS#readme",
+  "bugs": {
+    "url": "https://github.com/prateekbalothia/NodeJS/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prateekbalothia/NodeJS.git"
+  },
+  "license": "ISC",
+  "author": "Prateek",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
