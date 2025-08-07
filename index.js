@@ -6,6 +6,8 @@ const data = require("./data");
 const path = require("path");
 const express = require("express");
 const app = express();
+const reqFilter = require("./middleware")
+const route = express.Router();
 
 
 // console.log("Prateek".bgBlue);
@@ -28,18 +30,19 @@ const app = express();
 //using fs
 // fs.writeFileSync("demo.txt","lerning node js",)
 
-
 //creating files using path module
-const dirPath = path.join(__dirname, "files");
-const filePath = `${dirPath}/hello.txt`;
+// const dirPath = path.join(__dirname, "files");
+// const filePath = `${dirPath}/hello.txt`;
 // fs.writeFileSync(`${dirPath}/hello.txt`,`a simple text file`);
-// //get files
+
+//get files
 // fs.readdir(dirPath,(error,files)=>{
 //     // console.log(files)
 //     files.forEach((item)=>{
 //         console.log(item);
 //     })
 // })
+
 //read files
 // fs.readFile(filePath,'utf8',(error,file)=>{
 //     console.log(file);
@@ -75,19 +78,84 @@ const filePath = `${dirPath}/hello.txt`;
 
 
 //express js
-app.get('',(req,res)=>{
-    res.send(`
-        <h1>this is homepage...</h1>
-        <a href="/about">Go to About page</a>
-        `);
+// app.get('',(req,res)=>{
+//     res.send(`
+//         <h1>this is homepage...</h1>
+//         <a href="/about">Go to About page</a>
+//         `);
 
+// });
+// app.get('/about',(req,res)=>{
+//     res.send(`
+//         <h1>this is about page...</h1>
+//         <input type="text" placeholder="username" value="${req.query.name}">
+//         <a href="/">Go to homepage</a>    
+//     `);
+// });
+
+//accessing HTML file
+const publicPath = path.join(__dirname, "public");
+// app.use(express.static(publicPath))
+// app.get('',(req,res)=>{
+//     res.sendFile(`${publicPath}/index.html`);
+// })
+// app.get('/about',(req,res)=>{
+//     res.sendFile(`${publicPath}/about.html`);
+// })
+
+//ejs
+// app.set('view engine', 'ejs');
+// app.get('',(req,res)=>{
+//     res.sendFile(`${publicPath}/index.html`);
+// });
+// const user={
+//     Name:"Prateek Balothia",
+//     Email:"Prateek@test.com",
+//     City:"Jaipur",
+//     skills:['php', 'java', 'c++', 'node', 'JS']
+// }
+// app.get('/profile',(req,res)=>{
+//     res.render('profile',{user});
+// });
+// app.get('/login', (req,res)=>{
+//     res.render('login');
+// })
+
+
+//middleware
+// const reqFilter=(req,res,next)=>{
+//     if (!req.query.age) {
+//         res.send("Please provide age")
+//     }
+//     else if (req.query.age<18) {
+//         res.send("You can not access this page!")
+        
+//     }
+//     else{
+//         next();
+
+//     }
+// }
+// app.use(reqFilter);
+// app.get('/',(req,res)=>{
+//     res.send(`Welcome to Homepage`);
+// });
+// app.get('/about',(req,res)=>{
+//     res.send(`About US`);
+// });
+// app.get('/user',reqFilter,(req,res)=>{
+//     res.send(`User page`);
+// });
+route.use(reqFilter);
+
+app.get('/',(req,res)=>{
+    res.send(`Welcome to Homepage`);
 });
-app.get('/about',(req,res)=>{
-    res.send(`
-        <h1>this is about page...</h1>
-        <input type="text" placeholder="username" value="${req.query.name}">
-        <a href="/">Go to homepage</a>    
-    `);
+route.get('/about',(req,res)=>{
+    res.send(`About US`);
 });
+
+app.use(route);
+
 
 app.listen(4500);
