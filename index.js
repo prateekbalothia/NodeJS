@@ -1,13 +1,6 @@
 var colors = require("colors"); //importing package
 const imp1 = require("./imp1"); //importing elements of another file
-const fs = require("fs"); //importing filesystem module
 const http = require("http");
-const data = require("./data");
-const path = require("path");
-const express = require("express");
-const app = express();
-const reqFilter = require("./middleware")
-const route = express.Router();
 
 
 // console.log("Prateek".bgBlue);
@@ -15,7 +8,6 @@ const route = express.Router();
 // console.log("Hello!!".random);
 // console.log(imp1.z());
 // console.log(fltr.arr[6])
-
 
 
 //filter
@@ -28,9 +20,13 @@ const route = express.Router();
 
 
 //using fs
+const fs = require("fs"); //importing filesystem module
+
 // fs.writeFileSync("demo.txt","lerning node js",)
 
 //creating files using path module
+const path = require("path");
+
 // const dirPath = path.join(__dirname, "files");
 // const filePath = `${dirPath}/hello.txt`;
 // fs.writeFileSync(`${dirPath}/hello.txt`,`a simple text file`);
@@ -70,6 +66,8 @@ const route = express.Router();
 // }).listen(4500)
 
 //creating API
+const data = require("./data");
+
 // http.createServer((req,res)=>{
 //     res.writeHead(200,{'content-type':'application/json'});
 //     res.write(JSON.stringify(data));
@@ -78,6 +76,9 @@ const route = express.Router();
 
 
 //express js
+const express = require("express"); //importing exprssjs
+const app = express();  //initializing js
+
 // app.get('',(req,res)=>{
 //     res.send(`
 //         <h1>this is homepage...</h1>
@@ -94,7 +95,7 @@ const route = express.Router();
 // });
 
 //accessing HTML file
-const publicPath = path.join(__dirname, "public");
+// const publicPath = path.join(__dirname, "public");
 // app.use(express.static(publicPath))
 // app.get('',(req,res)=>{
 //     res.sendFile(`${publicPath}/index.html`);
@@ -123,13 +124,16 @@ const publicPath = path.join(__dirname, "public");
 
 
 //middleware
+const reqFilter = require("./middleware")
+
+
 // const reqFilter=(req,res,next)=>{
 //     if (!req.query.age) {
 //         res.send("Please provide age")
 //     }
 //     else if (req.query.age<18) {
 //         res.send("You can not access this page!")
-        
+
 //     }
 //     else{
 //         next();
@@ -146,16 +150,62 @@ const publicPath = path.join(__dirname, "public");
 // app.get('/user',reqFilter,(req,res)=>{
 //     res.send(`User page`);
 // });
-route.use(reqFilter);
 
-app.get('/',(req,res)=>{
-    res.send(`Welcome to Homepage`);
-});
-route.get('/about',(req,res)=>{
-    res.send(`About US`);
-});
+//using middleware on specific page using route
+const route = express.Router();
 
-app.use(route);
+// route.use(reqFilter);
+
+// app.get('/',(req,res)=>{
+//     res.send(`Welcome to Homepage`);
+// });
+// route.get('/about',(req,res)=>{
+//     res.send(`About US`);
+// });
+
+// app.use(route);
 
 
-app.listen(4500);
+// app.listen(4500);
+
+
+
+//using mongodb
+const { MongoClient } = require('mongodb'); //importing mongodb
+const url = 'mongodb://localhost:27017';  //mongodb path
+const client = new MongoClient(url);
+
+const database = 'e-comm';
+
+// async function dbConnect(){
+//     let result = await client.connect();
+//     let db = result.db(database);
+//     return db.collection('products');
+// let data = await collection.find({}).toArray();
+// console.log(data);
+// }
+
+//handling through promise
+// dbConnect().then((res)=>{
+//     res.find().toArray().then((data)=>{
+//         console.log(data);
+//     })
+// });
+
+//handle using async
+// const main = async ()=>{
+//     let data = await dbConnect();
+//     data = await data.find().toArray();
+//     console.log(data);
+// }
+// main()
+
+//use external file as connection
+const dbConnect = require('./mongodb');
+
+const main = async () => {
+    let data = await dbConnect();
+    data = await data.find().toArray();
+    console.log(data);
+}
+main()
