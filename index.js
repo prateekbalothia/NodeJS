@@ -20,12 +20,12 @@ const http = require("http");
 
 
 //using fs
-const fs = require("fs"); //importing filesystem module
+// const fs = require("fs"); //importing filesystem module
 
 // fs.writeFileSync("demo.txt","lerning node js",)
 
 //creating files using path module
-const path = require("path");
+// const path = require("path");
 
 // const dirPath = path.join(__dirname, "files");
 // const filePath = `${dirPath}/hello.txt`;
@@ -66,7 +66,7 @@ const path = require("path");
 // }).listen(4500)
 
 //creating API
-const data = require("./data");
+// const data = require("./data");
 
 // http.createServer((req,res)=>{
 //     res.writeHead(200,{'content-type':'application/json'});
@@ -76,8 +76,8 @@ const data = require("./data");
 
 
 //express js
-const express = require("express"); //importing exprssjs
-const app = express();  //initializing js
+// const express = require("express"); //importing exprssjs
+// const app = express();  //initializing js
 
 // app.get('',(req,res)=>{
 //     res.send(`
@@ -124,7 +124,7 @@ const app = express();  //initializing js
 
 
 //middleware
-const reqFilter = require("./middleware")
+// const reqFilter = require("./middleware")
 
 
 // const reqFilter=(req,res,next)=>{
@@ -152,7 +152,7 @@ const reqFilter = require("./middleware")
 // });
 
 //using middleware on specific page using route
-const route = express.Router();
+// const route = express.Router();
 
 // route.use(reqFilter);
 
@@ -171,11 +171,11 @@ const route = express.Router();
 
 
 //using mongodb
-const { MongoClient } = require('mongodb'); //importing mongodb
-const url = 'mongodb://localhost:27017';  //mongodb path
-const client = new MongoClient(url);
+// const { MongoClient } = require('mongodb'); //importing mongodb
+// const url = 'mongodb://localhost:27017';  //mongodb path
+// const client = new MongoClient(url);
 
-const database = 'e-comm';
+// const database = 'e-comm';
 
 // async function dbConnect(){
 //     let result = await client.connect();
@@ -201,11 +201,87 @@ const database = 'e-comm';
 // main()
 
 //use external file as connection
-const dbConnect = require('./mongodb');
+// const dbConnect = require('./mongodb');
 
-const main = async () => {
-    let data = await dbConnect();
-    data = await data.find().toArray();
-    console.log(data);
-}
-main()
+// const main = async () => {
+//     let data = await dbConnect();
+//     data = await data.find().toArray();
+//     console.log(data);
+// }
+// main()
+
+
+//post api mongoose
+// const express = require('express');
+// const app=express()
+// require('./config');
+// const product = require('./product')
+
+// app.use(express.json())
+
+// app.post("/create",async (req,res) => {
+//     let data = new product(req.body);
+//     let result = await data.save();
+//     console.log(result)
+//     res.send(result)
+//     console.log(req.body)
+// });
+
+// //get api mongoose
+// app.get('/list', async (req, res) => {
+//     let data = await product.find();
+//     res.send(data)
+// })
+
+// //delete api mongoose
+// app.delete('/delete/:_id', async (req, res) => {
+//     console.log(req.params);
+//     let data = await product.deleteOne(req.params);
+//     res.send(data);
+// })
+
+// //put api mongoose
+// app.put('/update/:_id', async (req,res) => {
+//     let data = await product.updateOne(
+//         req.params,
+//         {$set: req.body}
+//     )
+//     res.send(data)
+// })
+
+// //regex
+// app.get('/find/:key',async (req,res) => {
+//     console.log(req.params.key)
+//     let data = await product.find(
+//         {
+//             "$or":[
+//                 {"name":{$regex:req.params.key}}
+//             ]
+//         }
+//     )
+//     res.send(data)
+// })
+
+// app.listen(4500)
+
+//multer
+const express = require('express');
+const app = express();
+const multer = require('multer');
+const data = require("./data");
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, "public")
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.fieldname + "-" + Date.now() + ".jpg")
+        }
+    })
+}).single("user_file")
+app.post('/upload', upload, async (req, res) => {
+    res.send("file uploaded");
+})
+
+app.listen(4500);

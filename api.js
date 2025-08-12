@@ -27,13 +27,22 @@ app.post('/',async (req,res) => {
 })
 
 //put api method
-app.put('/', async (req, res) => {
+app.put('/:name', async (req, res) => {
     let data = await dbConnect()
     let result = data.updateOne(
-        {name:req.body.name},
+        {name:req.params.name},
         {$set:req.body}
     )
     res.send({result:"Updated"})
+})
+
+//delete method
+const mongodb = require('mongodb');//since id is an object
+//
+app.delete('/:id', async (req, res) => {
+    let data = await dbConnect();
+    let result = await data.deleteOne({_id: new mongodb.ObjectId(req.params.id)});
+    res.send(result);
 })
 
 
