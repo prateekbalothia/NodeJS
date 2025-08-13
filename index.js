@@ -265,23 +265,137 @@ const http = require("http");
 // app.listen(4500)
 
 //multer
-const express = require('express');
-const app = express();
-const multer = require('multer');
-const data = require("./data");
+// const express = require('express');
+// const app = express();
+// const multer = require('multer');
+// const data = require("./data");
 
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, "public")
-        },
-        filename: function (req, file, cb) {
-            cb(null, file.fieldname + "-" + Date.now() + ".jpg")
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination: function (req, file, cb) {
+//             cb(null, "./public/assets/img")
+//         },
+//         filename: function (req, file, cb) {
+//             cb(null, file.fieldname + "-" + Date.now() + ".jpg")
+//         }
+//     })
+// }).single("user_file")
+// app.post('/upload', upload, async (req, res) => {
+//     res.send("file uploaded");
+// })
+
+// app.listen(4500);
+
+//os module
+// const os = require('os');
+// const { log } = require("console");
+// console.log(os.arch());//system architecture
+// console.log(os.freemem()/(1024*1024*1024));//free memory(ram)
+// console.log(os.totalmem()/(1024*1024*1024));//available memory(ram)
+// console.log(os.hostname());//system name
+// console.log(os.platform());//os
+// console.log(os.userInfo());
+
+
+//event and event emitter
+// const express = require('express');
+// const EventEmitter = require('events');
+// const app = express();
+// const event = new EventEmitter();
+
+// let count=0;
+// event.on('countAPI',()=>{
+//     count++;
+//     console.log("event called",count)
+// })
+
+// app.get('/',async (req,res) => {
+//     res.send('api called');
+//     event.emit("countAPI");
+// });
+// app.get('/search',async (req,res) => {
+//     res.send('api searched');
+//     event.emit("countAPI");
+// });
+// app.get('/update',async (req,res) => {
+//     res.send('api updated');
+//     event.emit("countAPI");
+// });
+
+// app.listen(4500);
+
+//mysql
+// const mysql = require('mysql');
+
+// const con = mysql.createConnection({
+//     host:'localhost',
+//     user:'root',
+//     password:'',
+//     database:'test'
+// });
+// con.connect((err)=>{
+//     if(err){
+//         console.warn("error");
+//     }
+//     else{
+//         console.warn("connected")
+//     }
+// });
+
+// con.query("select * from users",(err,result)=>{
+//     console.warn("result",result)
+// })
+
+const con = require('./configsql')
+const express = require('express');
+const { name } = require("ejs");
+const app = express();
+
+//get api mysql
+app.get('/',(req,res)=>{
+    con.query("select * from users",(err,result)=>{
+        if(err){
+            res.send("error");
+        }
+        else{
+            res.send(result);
         }
     })
-}).single("user_file")
-app.post('/upload', upload, async (req, res) => {
-    res.send("file uploaded");
+});
+
+//post api mysql
+app.use(express.json());
+
+app.post('/',(req,res)=>{
+    const data = req.body;
+    con.query("INSERT INTO users SET ?",data, (error,result,fields)=>{
+        if(error){
+            error;
+        }
+        res.send(result);
+    })
+})
+
+//put api mysql
+app.put('/:id',(req,res)=>{
+    // const data = ["navya","0000","sleeper",4];//static
+    const data = [req.body.name, req.body.password, req.body.user_type, req.params.id];//dynamic
+    con.query("UPDATE users SET name = ?, password = ?, user_type = ? WHERE id = ?",data,(error,result,fields)=>{
+        if(error){
+            error;
+        }
+        res.send(result);
+    })
+});
+
+//delete api mysql
+app.delete('/:id',(req,res)=>{
+    // const data = 
+    con.query("DELETE FROM users WHERE id ="+ req.params.id, (error,result,fields)=>{
+        if(error) throw error;
+        res.send(result);
+    })
+    // res.send(req.params.id);
 })
 
 app.listen(4500);
